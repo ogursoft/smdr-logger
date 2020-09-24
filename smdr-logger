@@ -26,7 +26,7 @@ for(;;){
     #$_ =~ s/^[^ ]+//;
     if ($_ =~m"/") {
       &TXTout; #send data to CSV TXT subroutine
-    #  &DBconnect; #send data to the database subroutine
+      &DBconnect; #send data to the database subroutine
     }
   }
 
@@ -41,55 +41,53 @@ for(;;){
   }
 
   sub DBconnect {
+    my @cdr = split ',', $_;
     my $driver = "mysql";
-    my $database = "smdr";
+    my $database = "avaya";
     my $dsn = "DBI:$driver:database=$database";
     my $userid = "smdr";
-    my $password = "myp4ss!";
+    my $password = "Dm632541";
 
-    my $date       = ""; # First split of first column using space delimiter
-    my $time       = ""; # Second split of first column using space delimiter
-    my $cstart     = ""; # Call Start
-    my $cdur       = ""; # Call Duration
-    my $wtime      = ""; # Wait Time
-    my $caller     = ""; # Caller
-    my $dir        = ""; # Direction
-    my $called     = ""; # Called
-    my $dialled    = ""; # Dialled
-    my $acccode    = ""; # Account Code
-    my $int        = ""; # Internal
-    my $callid     = ""; # Call ID
-    my $cont       = ""; # Continuation
-    my $p1dev      = ""; # Party 1 Device
-    my $p1name     = ""; # Party 1 Name
-    my $p2dev      = ""; # Party 2 Device
-    my $p2name     = ""; # Party 2 Name
-    my $htime      = ""; # Hold Time (Total)
-    my $ptime      = ""; # Park Time (Total)
-    my $avalid     = ""; # Auth Valid
-    my $acode      = ""; # Auth Code
-    my $ucharged   = ""; # User Charged
-    my $callcharge = ""; # Call Charge
-    my $cur        = ""; # Currency
-    my $aocam      = ""; # AOC Amount
-    my $calluni    = ""; # Call Units
-    my $aocuni     = ""; # AOC Units
-    my $cpuni      = ""; # Cost per Unit
-    my $markup     = ""; # Mark Up
-    my $extarc     = ""; # Ex Targeting Cause
-    my $extari     = ""; # Ex Targeting ID
-    my $extarn     = ""; # Ex Targeting Number
- 
+    my $callstart = $cdr[0];
+    my $connectedtime = $cdr[1];
+    my $ringtime = $cdr[2];
+    my $caller = $cdr[3];
+    my $direction = $cdr[4];
+    my $callednumber = $cdr[5];
+    my $diallednumber = $cdr[6];
+    my $account = $cdr[7];
+    my $isinternal = $cdr[8];
+    my $callid = $cdr[9];
+    my $continuation = $cdr[10];
+    my $party1device = $cdr[11];
+    my $party1name = $cdr[12];
+    my $party2device = $cdr[13];
+    my $party2name = $cdr[14];
+    my $holdtime = $cdr[15];
+    my $parktime = $cdr[16];
+    my $authvalid = $cdr[17];
+    my $authcode = $cdr[18];
+    my $usercharged = $cdr[19];
+    my $callcharge = $cdr[20];
+    my $currency = $cdr[21];
+    my $amountatlastuserchange = $cdr[22];
+    my $callunits = $cdr[23];
+    my $unitsatlastuserchange = $cdr[24];
+    my $costperunit = $cdr[25];
+    my $markup = $cdr[26];
+    my $externaltargetingcause = $cdr[27];
+    my $externaltargeterid = $cdr[28];
+    my $externaltargetednumber = $cdr[29];
+    
 
     my $dbh = DBI->connect($dsn, $userid, $password) or die $DBI::errstr;
-    my $sth = $dbh->prepare("INSERT into calls
-      (,,,,,,,,,,,)
-      VALUES
-      (?,?,?,?,?,?,?,?,?)");
+    my $sth = $dbh->prepare("INSERT INTO smdr
+    (CallStart,ConnectedTime,RingTime,Caller,Direction,CalledNumber,DialledNumber,Account,IsInternal,CallID,Continuation,Party1Device,Party1Name,Party2Device,Party2Name,HoldTime,ParkTime,AuthValid,AuthCode,UserCharged,CallCharge,Currency,AmountatLastUserChange,CallUnits,UnitsatLastUserChange,CostperUnit,MarkUp,ExternalTargetingCause,ExternalTargeterId,ExternalTargetedNumber)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
-    #$sth->execute($date,$time,$cstart,$cdur,$wtime,$caller,$dir,$called,$dialled,$acccode,$int,$callid,$cont,$p1dev,$p1name,$p2dev,$p2name,$htime,$ptime,$avalid,$acode,$ucharged,$callcharge,$cur,$aocam,$calluni,$aocuni,$cpuni,$markup,$extarc,$extari,$extarn) or die $DBI::errstr;
+    $sth->execute($callstart,$connectedtime,$ringtime,$caller,$direction,$callednumber,$diallednumber,$account,$isinternal,$callid,$continuation,$party1device,$party1name,$party2device,$party2name,$holdtime,$parktime,$authvalid,$authcode,$usercharged,$callcharge,$currency,$amountatlastuserchange,$callunits,$unitsatlastuserchange,$costperunit,$markup,$externaltargetingcause,$externaltargeterid,$externaltargetednumber) or die $DBI::errstr;
     $sth->finish();
-    $dbh->commit or die $DBI::errstr;
+    #$dbh->commit or die $DBI::errstr;
     $dbh->disconnect or warn $dbh->errstr;
   } 
 
