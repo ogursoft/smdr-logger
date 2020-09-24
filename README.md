@@ -8,4 +8,4 @@ Make sure you have both perl and libdbi-perl installed
 
 Run install.sh as root then edit /etc/smdr-logger/smdr.conf to match your IPO500 IP and port numbers.
 
-The original code was taken from SimpleSMDR by Gerry Armstrong
+The original code was taken from SimpleSMDR by Gerry Armstrong and Charlie Tank (hexnet)
