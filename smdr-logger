@@ -45,8 +45,8 @@ for(;;){
     my $driver = "mysql";
     my $database = "avaya";
     my $dsn = "DBI:$driver:database=$database";
-    my $userid = "smdr";
-    my $password = "Dm632541";
+    my $userid = "dbuser";
+    my $password = "************";
 
     my $callstart = $cdr[0];
     my $connectedtime = $cdr[1];
